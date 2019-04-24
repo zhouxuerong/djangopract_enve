@@ -11,6 +11,7 @@
    <ul>
        {% for student in students %}
            <li>{{ student.name }} - {{ sutdent.get_status_display }}</li>
+       {% endfor %}
    </ul>
    <form action="/" method="post">
        {% csrf_token %}
