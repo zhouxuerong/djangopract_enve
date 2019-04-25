@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Category(models.Model):
     STATUS_NORMAL = 1
     STATUS_DELETE = 0
@@ -20,6 +21,22 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def get_navs(cls):
+        categories = cls.objects.filter(status=cls.STATUS_NORMAL)
+        nav_categories = []
+        normal_categories = []
+        for cate in categories:
+            if cate.is_nav:
+                nav_categories.append(cate)
+            else:
+                normal_categories.append(cate)
+        print("---navs的值--",nav_categories)
+        return {
+            "navs":nav_categories,
+            "categories":normal_categories,
+        }
 
 class Tag(models.Model):
     STATUS_NORMAL = 1
@@ -54,12 +71,16 @@ class Post(models.Model):
     desc = models.CharField(max_length=1024,blank=True,verbose_name="摘要")
     #help_text 在该 field 被渲染成 form 是显示帮助信息
     content = models.TextField(verbose_name="正文",help_text=("正文必须为MarkDown格式"))
+    # PositiveIntegerField 正整数
     status = models.PositiveIntegerField(default=STATUS_NORMAL,
                                          choices=STATUS_ITEMS,verbose_name="状态")
     category = models.ForeignKey(Category,verbose_name="分类",on_delete=models.DO_NOTHING)
     tag = models.ManyToManyField(Tag,verbose_name="标签")
     owner = models.ForeignKey(User,verbose_name="作者",on_delete=models.DO_NOTHING)
     created_time = models.DateTimeField(auto_now_add=True,verbose_name="创建时间")
+    # 统计文章的访问量
+    pv = models.PositiveIntegerField(default=1)
+    pu = models.PositiveIntegerField(default=1)
 
     class Meta:
         verbose_name = verbose_name_plural = "文章"  #配置展示名
@@ -67,3 +88,36 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    @staticmethod
+    def get_by_tag(tag_id):
+        try:
+            tag = Tag.objects.get(id=tag_id)
+            print("tag:",tag)
+        except Tag.DoesNotExist:
+            tag = None
+            post_list = []
+        else:
+            post_list = tag.post_set.filter(status=Post.STATUS_NORMAL)\
+                .select_related("owner","category")
+        return post_list,tag
+
+    @staticmethod
+    def get_by_category(category_id):
+        try:
+            category = Category.objects.get(id=category_id)
+        except Category.DoesNotExist:
+            category = None
+            post_list = []
+        else:
+            post_list=category.post_set.filter(status=Post.STATUS_NORMAL)\
+                .select_related("owner","category")
+        return post_list,category
+
+    @classmethod
+    def latest_posts(cls):
+        return cls.objects.filter(status=cls.STATUS_NORMAL)
+
+    @classmethod
+    def hot_posts(cls):
+        return cls.objects.filter(status=cls.STATUS_NORMAL).order_by("-pv")

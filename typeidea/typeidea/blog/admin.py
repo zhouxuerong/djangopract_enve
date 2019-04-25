@@ -5,6 +5,7 @@ from django.urls import reverse
 from .adminforms import PostAdminForm
 from typeidea.custom_site import custom_site
 from typeidea.BaseOwnerAdmin import BaseOwnerAdmin
+from django.contrib.admin.models import LogEntry
 
 #对于一个页面内容完成两个关联模型的需求，使用inline admin方式
 # 在分类也看中直接编辑文章
@@ -102,8 +103,11 @@ class PostAdmin(BaseOwnerAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.owner = request.user
-        return super(self,PostAdmin).save_model(request,obj,form,change)
+        return super(PostAdmin,self).save_model(request,obj,form,change)
 
+@admin.register(LogEntry,site=custom_site)
+class LogEntryAdmin(admin.ModelAdmin):
+    list_display = ['object_repr','object_id','action_flag','user','change_message']
 
 
 
