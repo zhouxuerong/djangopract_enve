@@ -17,17 +17,20 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url
 from .custom_site import custom_site
-from blog.views import post_list,post_detail
+from blog.views import IndexView,CategoryView,TagView,PostDetailView
 from config.views import links
 
 
 urlpatterns = [
     # url(正则字符串，view function，固定参数context，ulr的名称)
-    path('super_admin/', admin.site.urls),
-    path('admin/', custom_site.urls),
-    url(r'^category/(?P<category_id>\d+)/$',post_list),
-    url(r'^tag/(?P<tag_id>\d+)/$',post_list),
-    url(r'^post/(?P<post_id>\d+).html$',post_detail),
-    url(r'^links/$',links),
+    # path('super_admin/', admin.site.urls),
+    url(r'super_admin/', admin.site.urls,name="super-admin"),
+    # path('admin/', custom_site.urls),
+    path(r'admin/', custom_site.urls,name="admin"),
+    url(r'^category/(?P<category_id>\d+)/$',CategoryView.as_view(),name="category-list"),
+    url(r'^tag/(?P<tag_id>\d+)/$',TagView.as_view(),name="tag-list"),
+    url(r'^post/(?P<post_id>\d+).html$',PostDetailView.as_view(),name="post-detail"),
+    # url(r'^post/(?P<pk>\d+).html$',PostDetailView.asview(),name="post-detail"),
+    url(r'^links/$',links,name="links"),
 
 ]
