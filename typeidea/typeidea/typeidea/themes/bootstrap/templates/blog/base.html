@@ -1,4 +1,5 @@
 {% load static %}
+{% load comment_block %}
 <!DOCTYPE HTML>
 <html lang="en">
   <head>
@@ -56,6 +57,29 @@
                         </div>
                     </div>
                     {% endfor %}
+                <hr/>
+                {% comment_block request.path %}
+                <!--&lt;!&ndash;评论&ndash;&gt;-->
+        <!--<div class="comment">-->
+            <!--<form class="form-group" action="/comment/" method="POST">-->
+                <!--{% csrf_token %}-->
+                <!--<input name="target" type="hidden" value="{{ target }}">-->
+                <!--{{ comment_form }}-->
+                <!--<input type="submit" value="写好了！">-->
+            <!--</form>-->
+
+            <!--&lt;!&ndash;评论列表&ndash;&gt;-->
+            <!--<ul class="list-group">-->
+                <!--{% for comment in comment_list %}-->
+                <!--<li class="list-group-item">-->
+                    <!--<div class="nickname">-->
+                        <!--<a href="{{ comment.website }}">{{ comment.nickname }}</a>-->
+                        <!--<span>{{ comment.created_time }}</span>-->
+                    <!--</div>-->
+                <!--</li>-->
+                <!--{% endfor %}-->
+            <!--</ul>-->
+        <!--</div>-->
                 {% endblock %}
             </div>
         </div>
@@ -74,6 +98,7 @@
         <div class="container power">
             <span class="text-muted">Power by Typeidea@the5fire</span>
         </div>
+
         {% endblock %}
     </footer>
   </body>
