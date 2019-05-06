@@ -1,10 +1,11 @@
-
+<hr>
     <div class="comment">
-            <form class="form-group" action="/comment/" method="POST">
+            <form id="comment_form" class="form-group" action="/comment/" method="POST">
                 {% csrf_token %}
-                <input name="target" type="hidden" value="{{ target }}">
+                <input name="target" type="hidden" value="{{ target }}"/>
                 {{ comment_form }}
                 <input type="submit" value="写好了！">
+
             </form>
 
             <!--评论列表-->
@@ -24,3 +25,4 @@
                 {% endfor %}
             </ul>
         </div>
+

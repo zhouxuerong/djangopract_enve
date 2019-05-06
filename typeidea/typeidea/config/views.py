@@ -4,8 +4,6 @@ from django.http import HttpResponse
 from .models import Link
 from blog.views import CommonViewMixin
 
-def links(request):
-    return HttpResponse("links")
 
 class LinkListView(CommonViewMixin,ListView):
     queryset = Link.objects.filter(status=Link.STATUS_NORMAL)

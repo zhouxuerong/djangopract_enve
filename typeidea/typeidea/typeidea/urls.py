@@ -18,7 +18,7 @@ from django.urls import path
 from django.conf.urls import url
 from .custom_site import custom_site
 from blog.views import IndexView,CategoryView,TagView,PostDetailView,SearchView,AuthorView
-from config.views import links,LinkListView
+from config.views import LinkListView
 from comment.views import CommentView
 
 
