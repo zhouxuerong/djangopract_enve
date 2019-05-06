@@ -38,6 +38,7 @@ class CommentForm(forms.ModelForm):
         content = self.cleaned_data.get("content")
         if len(content)<10:
             raise forms.ValidationError("内容长度怎么能这么短呢！")
+        # 在写数据的时候进行MARKDOWN处理
         content = mistune.markdown(content)
         return content
 

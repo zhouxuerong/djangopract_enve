@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+import mistune
 
-
+# 分类
 class Category(models.Model):
     STATUS_NORMAL = 1
     STATUS_DELETE = 0
@@ -56,6 +57,7 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+# 文章
 class Post(models.Model):
     STATUS_NORMAL = 1
     STATUS_DELETE = 0
@@ -71,6 +73,7 @@ class Post(models.Model):
     desc = models.CharField(max_length=1024,blank=True,verbose_name="摘要")
     #help_text 在该 field 被渲染成 form 是显示帮助信息
     content = models.TextField(verbose_name="正文",help_text=("正文必须为MarkDown格式"))
+    content_html = models.TextField(verbose_name="正文html代码",blank=True,editable=False)
     # PositiveIntegerField 正整数
     status = models.PositiveIntegerField(default=STATUS_NORMAL,
                                          choices=STATUS_ITEMS,verbose_name="状态")
@@ -80,7 +83,7 @@ class Post(models.Model):
     created_time = models.DateTimeField(auto_now_add=True,verbose_name="创建时间")
     # 统计文章的访问量
     pv = models.PositiveIntegerField(default=1)
-    pu = models.PositiveIntegerField(default=1)
+    uv = models.PositiveIntegerField(default=1)
 
     class Meta:
         verbose_name = verbose_name_plural = "文章"  #配置展示名
@@ -121,3 +124,7 @@ class Post(models.Model):
     @classmethod
     def hot_posts(cls):
         return cls.objects.filter(status=cls.STATUS_NORMAL).order_by("-pv")
+
+    def save(self,*args,**kwargs):
+        self.content_html = mistune.markdown(self.content)
+        super().save(*args,**kwargs)
