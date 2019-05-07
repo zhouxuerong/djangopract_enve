@@ -39,8 +39,11 @@ class CommonViewMixin:
         }
 
 
-class IndexView(ListView):
-    queryset = Post.latest_posts()
+class IndexView(CommonViewMixin,ListView):
+    # queryset = Post.latest_posts()
+    queryset = Post.objects.filter(status=Post.STATUS_NORMAL) \
+        .select_related('owner') \
+        .select_related('category')
     paginate = 5
     context_object_name = "post_list"
     template_name = "blog/list.html"
@@ -70,6 +73,7 @@ class TagView(IndexView):
         context.update({
             "tag": tag,
         })
+        print("标签：",context)
         return context
 
     def get_queryset(self):
@@ -80,7 +84,8 @@ class TagView(IndexView):
         return queryset.filter(tag__id=tag_id)
 
 class PostDetailView(CommonViewMixin,DetailView):
-    queryset = Post.latest_posts()
+    queryset = Post.objects.filter(status=Post.STATUS_NORMAL)
+    # queryset = Post.latest_posts()
     template_name = "blog/detail.html"
     context_object_name = "post"
     pk_url_kwarg = "post_id"

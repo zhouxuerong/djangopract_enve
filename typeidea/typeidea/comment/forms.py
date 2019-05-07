@@ -2,6 +2,7 @@ from django import forms
 
 from .models import Comment
 import mistune
+from ckeditor.widgets import CKEditorWidget
 
 class CommentForm(forms.ModelForm):
     nickname = forms.CharField(
@@ -33,6 +34,9 @@ class CommentForm(forms.ModelForm):
             attrs={"class": "form-control", "style": "width:60%;"}
         )
     )
+
+    # content = forms.CharField(widget=CKEditorWidget(),label="正文",required=True)
+
     # 控制评论的长度
     def clean_content(self):
         content = self.cleaned_data.get("content")
