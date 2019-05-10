@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'dal',
     'dal_select2',
     'ckeditor',
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -167,3 +168,8 @@ CKEDITOR_CONFIGS = {
     },
 }
 
+# 分页
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS":"rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE":2,
+}

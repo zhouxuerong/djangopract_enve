@@ -59,7 +59,7 @@ class PostAdmin(BaseOwnerAdmin):
     list_display = ['title',"category","status","created_time",'owner','operator']
     list_display_links = []
     # 指定哪些字段不展示
-    exclude = ('owner',)
+    exclude = ['owner',]
 
     list_filter = ['category', ]
     search_fields = ['title','category__name']
@@ -97,9 +97,9 @@ class PostAdmin(BaseOwnerAdmin):
 
     operator.short_description = "操作"
 
-    def save_model(self, request, obj, form, change):
-        obj.owner = request.user
-        return super(PostAdmin,self).save_model(request,obj,form,change)
+    # def save_model(self, request, obj, form, change):
+    #     obj.owner = request.user
+    #     return super(PostAdmin,self).save_model(request,obj,form,change)
 
 # @xadmin.sites.register(LogEntry)
 # class LogEntryAdmin(admin.ModelAdmin):

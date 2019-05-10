@@ -13,9 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path
-from django.conf.urls import url
+from django.conf.urls import url,include
 from .custom_site import custom_site
 from blog.views import IndexView,CategoryView,TagView,PostDetailView,SearchView,AuthorView
 from config.views import LinkListView
@@ -25,6 +26,14 @@ from blog.rss import LatestPostFeed
 from blog.sitemap import PostSitemap
 import xadmin
 from .autocomplete import CategoryAutocomplete,TagAutocomplete
+from rest_framework.documentation import include_docs_urls
+
+
+from rest_framework.routers import DefaultRouter
+from blog.apis import PostViewSet
+router = DefaultRouter()
+router.register(r'post',PostViewSet,base_name="api-post")
+
 
 
 urlpatterns = [
@@ -46,5 +55,7 @@ urlpatterns = [
     url(r'^sitemap\.xml$',sitemap_view.sitemap,{'sitemaps':{'posts':PostSitemap}}),
     url(r'^category-autocomplete/$', CategoryAutocomplete.as_view(), name='category-autocomplete'),
     url(r'^tag-autocomplete/$', TagAutocomplete.as_view(), name='tag-autocomplete'),
+    url(r'^api/', include(router.urls)),
+    url(r'^api/docs/', include_docs_urls(title="typeidea.apis")),
 
 ]
