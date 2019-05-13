@@ -41,7 +41,7 @@ class CommonViewMixin:
 
 class IndexView(CommonViewMixin,ListView):
     # queryset = Post.latest_posts()
-    queryset = Post.objects.filter(status=Post.STATUS_NORMAL) \
+    queryset = Post.objects.filter(status=Post.STATUS_NORMAL)\
         .select_related('owner') \
         .select_related('category')
     paginate = 5

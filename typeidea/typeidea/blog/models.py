@@ -54,6 +54,7 @@ class Tag(models.Model):
 
     class Meta:
         verbose_name = verbose_name_plural = "标签"
+        ordering = ['-id']
 
     def __str__(self):
         return self.name
@@ -119,8 +120,12 @@ class Post(models.Model):
         return post_list,category
 
     @classmethod
-    def latest_posts(cls):
+    def latest_posts(cls,with_related=True):
+        # with_related 控制返回是否需要加上owner,category两个外键数据
         return cls.objects.filter(status=cls.STATUS_NORMAL)
+        if with_related:
+            queryset = queryset.select_related('owner','category')
+        return queryset
 
     @classmethod
     def hot_posts(cls):

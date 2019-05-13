@@ -27,12 +27,14 @@ from blog.sitemap import PostSitemap
 import xadmin
 from .autocomplete import CategoryAutocomplete,TagAutocomplete
 from rest_framework.documentation import include_docs_urls
+from django.conf import settings
 
 
 from rest_framework.routers import DefaultRouter
-from blog.apis import PostViewSet
+from blog.apis import PostViewSet,CategoryViewSet
 router = DefaultRouter()
 router.register(r'post',PostViewSet,base_name="api-post")
+router.register(r'category',CategoryViewSet,base_name="category-post")
 
 
 
@@ -59,3 +61,10 @@ urlpatterns = [
     url(r'^api/docs/', include_docs_urls(title="typeidea.apis")),
 
 ]
+
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        url(r'^__debug__/',include(debug_toolbar.urls)),
+    ] + urlpatterns
